@@ -1,6 +1,6 @@
 
 // controllers 
-import TasksController from "../controllers/tasks/UsersController.js";
+import TasksController from "../controllers/tasks/TasksController.js";
 
 const tasksController = new TasksController();
 

@@ -1,13 +1,28 @@
 
+// services 
+import ListTasksService from "../../services/LisTasksService.js";
+import CreateTaskService from "../../services/CreateTasksService.js";
+import UpdateTaskService from "../../services/UpdateTaskService.js";
+import RemoveTaskService from "../../services/RemoveTaskService.js";
+import CompleteTaskService from "../../services/CompleteTaskService.js";
+import ImportTasksService from "../../services/ImportTasksService.js";
 
 export default class TasksController {
 
-    async listTasks(req, res) {
+    async listTasks(_, res) {
         try {
 
-            const tasks = []
+            const listTasksService = new ListTasksService();
+
+            const tasks = await listTasksService.execute();
 
             res.setHeader('Content-Type', 'application/json');
+
+            if (!tasks.length > 0) {
+
+                res.end(JSON.stringify({ message: "No tasks found", tasks }));
+
+            }
 
             res.end(JSON.stringify({ message: "Tasks listed successfully", tasks }));
 
@@ -20,10 +35,12 @@ export default class TasksController {
     }
 
 
-    async createTask(req, res) {
+    async createTask(_, res) {
         try {
 
-            const task = {}
+            const createTaskService = new CreateTaskService();
+
+            const task = await createTaskService.execute();
 
             res.setHeader('Content-Type', 'application/json');
 
@@ -40,7 +57,12 @@ export default class TasksController {
     async updateTaskById(req, res) {
         try {
 
-            const task = {}
+            const updateTaskService = new UpdateTaskService();
+
+            const { id } = req.params;
+            const { name, description } = req.body;
+
+            const task = await updateTaskService.execute(name, description, id);
 
             res.setHeader('Content-Type', 'application/json');
 
@@ -56,11 +78,15 @@ export default class TasksController {
     async removeTaskById(req, res) {
         try {
 
-            const task = {}
+            const removeTaskService = new RemoveTaskService();
+
+            const { id } = req.params;
 
             res.setHeader('Content-Type', 'application/json');
 
-            res.end(JSON.stringify({ message: "Task removed successfully", task }));
+            await removeTaskService.execute(id);
+
+            res.end(JSON.stringify({ message: "Task removed successfully" }));
 
         } catch (error) {
 
@@ -73,7 +99,11 @@ export default class TasksController {
     async completeTaskById(req, res) {
         try {
 
-            const task = {}
+            const completeTaskService = new CompleteTaskService();
+
+            const { id } = req.params;
+
+            const task = await completeTaskService.execute(id);
 
             res.setHeader('Content-Type', 'application/json');
 
@@ -86,10 +116,12 @@ export default class TasksController {
         }
     }
 
-    async importTasks(req, res) {
+    async importTasks(_, res) {
         try {
 
-            const tasks = []
+            const importTasksService = new ImportTasksService();
+
+            const tasks = await importTasksService.execute();
 
             res.setHeader('Content-Type', 'application/json');
 
