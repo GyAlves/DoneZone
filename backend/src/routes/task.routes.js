@@ -1,42 +1,39 @@
 
 // controllers 
-import GetTasksController from "../controllers/tasks/get-tasks-controller.js";
-import CreateTaskController from "../controllers/tasks/create-task-controller.js";
-import UpdateTaskController from "../controllers/tasks/update-task-controller.js";
-import RemoveTaskController from "../controllers/tasks/remove-task-controller.js";
-import CompleteTaskController from "../controllers/tasks/complete-task-controller.js";
-import ImportTasksController from "../controllers/tasks/import-tasks-controller.js";
+import TasksController from "../controllers/tasks/UsersController.js";
+
+const tasksController = new TasksController();
 
 const tasksRouter = [
     {
         method: "GET",
         path: "/tasks",
-        handler: (req, res) => GetTasksController(req, res)
+        handler: (req, res) => tasksController.listTasks(req, res)
     },
     {
         method: "POST",
         path: "/task",
-        handler: (req, res) => CreateTaskController(req, res)
+        handler: (req, res) => tasksController.createTask(req, res)
     },
     {
         method: "PUT",
         path: "/task/:id",
-        handler: (req, res) => UpdateTaskController(req, res)
+        handler: (req, res) => tasksController.updateTaskById(req, res)
     },
     {
         method: "DELETE",
         path: "/task/:id",
-        handler: (req, res) => RemoveTaskController(req, res)
+        handler: (req, res) => tasksController.removeTaskById(req, res)
     },
     {
         method: "PATCH",
         path: "/task/:id",
-        handler: (req, res) => CompleteTaskController(req, res)
+        handler: (req, res) => tasksController.completeTaskById(req, res)
     },
     {
         method: "POST",
         path: "/tasks/import",
-        handler: (req, res) => ImportTasksController(req, res)
+        handler: (req, res) => tasksController.importTasks(req, res)
     }
 ];
 
