@@ -10,7 +10,6 @@ const routeHandler = (req, res) => {
     const route = routes
         .find(r => r.method === method && r.path === url);
 
-
     if (!route) {
 
         res.writeHead(404, { 'Content-Type': 'text/plain' });
