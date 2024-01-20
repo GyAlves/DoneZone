@@ -1,4 +1,7 @@
-import http from "node:http"
+// dependencies
+import http from "node:http";
+
+// middlewares
 import routeHandler from "./middlewares/route-handler.js";
 
 const server = http.createServer((req, res) => routeHandler(req, res));

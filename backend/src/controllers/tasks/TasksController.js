@@ -21,7 +21,6 @@ export default class TasksController {
             if (!tasks.length > 0) {
 
                 res.end(JSON.stringify({ message: "No tasks found", tasks }));
-
             }
 
             res.end(JSON.stringify({ message: "Tasks listed successfully", tasks }));
