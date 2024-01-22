@@ -5,6 +5,9 @@ import { parse } from 'csv-parse';
 //repository
 import TasksRepository from "../repositories/tasks/TasksRepository.js";
 
+// error-handling
+import InvalidCsvMultiPartFormError from "../errors/invalid-csv-multi-part-form-error.js";
+
 // utils
 import generateUUID from "../utils/generate-uuid-util.js";
 
@@ -23,7 +26,7 @@ export default class CompleteTasksService {
         let csvStartIndex = lines.findIndex((line) => line.startsWith('title,'));
 
         if (csvStartIndex === -1) {
-            throw new Error('CSV data not found in the multipart form data.');
+            throw new InvalidCsvMultiPartFormError();
         }
 
         csvStartIndex += 1;

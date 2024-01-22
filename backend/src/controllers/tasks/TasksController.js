@@ -10,6 +10,10 @@ import ImportTasksService from "../../services/ImportTasksService.js";
 //database
 import { Database } from "../../database/database-config.js";
 
+// error-handling
+import TaskNotFoundError from "../../errors/task-does-not-exists-error.js"
+import InvalidCsvMultiPartFormError from "../../errors/task-does-not-exists-error.js"
+
 export default class TasksController {
 
     constructor() {
@@ -75,7 +79,10 @@ export default class TasksController {
 
         } catch (error) {
 
-            // TODO: create an Error Handler
+            if (error instanceof TaskNotFoundError) {
+                res.writeHead(error.statusCode);
+                return res.end('Error updating task: ' + error.message);
+            }
 
             res.writeHead(400);
             res.end('Error updating task: ' + error.message);
@@ -95,6 +102,12 @@ export default class TasksController {
             res.end(JSON.stringify({ message: "Task removed successfully" }));
 
         } catch (error) {
+
+            if (error instanceof TaskNotFoundError) {
+
+                res.writeHead(error.statusCode);
+                return res.end('Error removing task: ' + error.message);
+            }
 
             res.writeHead(400);
             res.end('Error deleting task: ' + error.message);
@@ -116,6 +129,12 @@ export default class TasksController {
 
         } catch (error) {
 
+            if (error instanceof TaskNotFoundError) {
+
+                res.writeHead(error.statusCode);
+                return res.end('Error completing tasks: ' + error.message);
+            }
+
             res.writeHead(400);
             res.end('Error completing task: ' + error.message);
         }
@@ -135,6 +154,12 @@ export default class TasksController {
             res.end(JSON.stringify({ message: "Tasks imported successfully", tasks }));
 
         } catch (error) {
+
+            if (error instanceof InvalidCsvMultiPartFormError) {
+
+                res.writeHead(error.statusCode);
+                return res.end('Error importing tasks: ' + error.message);
+            }
 
             res.writeHead(400);
             res.end('Error importing tasks: ' + error.message);

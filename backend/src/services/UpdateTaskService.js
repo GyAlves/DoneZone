@@ -1,6 +1,9 @@
 
 //repository
 import TasksRepository from "../repositories/tasks/TasksRepository.js";
+
+// error-handling
+import TaskNotFoundError from "../errors/task-does-not-exists-error.js";
 export default class UpdateTasksService {
 
     #tasksRepository;
@@ -16,7 +19,7 @@ export default class UpdateTasksService {
         const taskExists = tasks.find(task => task.id === id);
 
         if (!taskExists) {
-            throw new Error("Task not found");
+            throw new TaskNotFoundError();
         }
 
         const filteredTask = {};
