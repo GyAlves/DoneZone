@@ -2,9 +2,14 @@
 import http from "node:http";
 
 // middlewares
-import routeHandler from "./middlewares/route-handler.js";
+import routeHandlerMiddleware from "./middlewares/route-handler-middleware.js";
+import routeParamsHandlerMiddleware from "./middlewares/params-handler-middleware.js";
 
-const server = http.createServer((req, res) => routeHandler(req, res));
+const server = http.createServer((req, res) => {
+    routeParamsHandlerMiddleware(req, res, () => {
+        routeHandlerMiddleware(req, res);
+    });
+});
 
 const port = 4000;
 

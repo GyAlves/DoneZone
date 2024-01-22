@@ -7,48 +7,52 @@ import RemoveTaskService from "../../services/RemoveTaskService.js";
 import CompleteTaskService from "../../services/CompleteTaskService.js";
 import ImportTasksService from "../../services/ImportTasksService.js";
 
+//database
+import { Database } from "../../database/database-config.js";
+
 export default class TasksController {
 
-    async listTasks(_, res) {
+    constructor() {
+        this.tasksDatabase = new Database();
+    }
+
+    async listTasks(req, res) {
         try {
 
-            const listTasksService = new ListTasksService();
+            const listTasksService = new ListTasksService(this.tasksDatabase);
 
-            const tasks = await listTasksService.execute();
+            const { queryParams } = req;
+
+            const tasks = await listTasksService.execute({ searchQuery: queryParams });
 
             res.setHeader('Content-Type', 'application/json');
-
-            if (!tasks.length > 0) {
-
-                res.end(JSON.stringify({ message: "No tasks found", tasks }));
-            }
 
             res.end(JSON.stringify({ message: "Tasks listed successfully", tasks }));
 
         } catch (error) {
 
             res.writeHead(400);
-            res.end('Error getting tasks: ' + error.message);
+            res.end('Error listing all tasks: ' + error.message);
         }
 
     }
 
-
-    async createTask(_, res) {
+    async createTask(req, res) {
         try {
 
-            const createTaskService = new CreateTaskService();
+            const createTaskService = new CreateTaskService(this.tasksDatabase);
 
-            const task = await createTaskService.execute();
+            let taskPayload = req.body;
+
+            const taskCreated = await createTaskService.execute(taskPayload);
 
             res.setHeader('Content-Type', 'application/json');
-
-            res.end(JSON.stringify({ message: "Task created successfully", task }));
+            res.end(JSON.stringify({ message: "Task created successfully", task: taskCreated }));
 
         } catch (error) {
 
             res.writeHead(400);
-            res.end('Error getting tasks: ' + error.message);
+            res.end('Error creating task: ' + error.message);
         }
 
     }
@@ -56,53 +60,53 @@ export default class TasksController {
     async updateTaskById(req, res) {
         try {
 
-            const updateTaskService = new UpdateTaskService();
+            const updateTaskService = new UpdateTaskService(this.tasksDatabase);
 
-            const { id } = req.params;
-            const { name, description } = req.body;
+            const [id] = req.urlParams;
 
-            const task = await updateTaskService.execute(name, description, id);
+            let taskPayload = req.body;
+
+            const task = await updateTaskService.execute({ id, task: taskPayload });
 
             res.setHeader('Content-Type', 'application/json');
 
             res.end(JSON.stringify({ message: "Task updated successfully", task }));
 
+
         } catch (error) {
 
             res.writeHead(400);
-            res.end('Error getting tasks: ' + error.message);
+            res.end('Error updating task: ' + error.message);
         }
     }
 
     async removeTaskById(req, res) {
         try {
 
-            const removeTaskService = new RemoveTaskService();
+            const removeTaskService = new RemoveTaskService(this.tasksDatabase);
 
-            const { id } = req.params;
+            const [id] = req.urlParams;
+
+            await removeTaskService.execute({ id });
 
             res.setHeader('Content-Type', 'application/json');
-
-            await removeTaskService.execute(id);
-
             res.end(JSON.stringify({ message: "Task removed successfully" }));
 
         } catch (error) {
 
             res.writeHead(400);
-            res.end('Error getting tasks: ' + error.message);
+            res.end('Error deleting task: ' + error.message);
         }
     }
-
 
     async completeTaskById(req, res) {
         try {
 
-            const completeTaskService = new CompleteTaskService();
+            const completeTaskService = new CompleteTaskService(this.tasksDatabase);
 
-            const { id } = req.params;
+            const [id] = req.urlParams;
 
-            const task = await completeTaskService.execute(id);
+            const task = await completeTaskService.execute({ id });
 
             res.setHeader('Content-Type', 'application/json');
 
@@ -111,14 +115,14 @@ export default class TasksController {
         } catch (error) {
 
             res.writeHead(400);
-            res.end('Error getting tasks: ' + error.message);
+            res.end('Error completing task: ' + error.message);
         }
     }
 
     async importTasks(_, res) {
         try {
 
-            const importTasksService = new ImportTasksService();
+            const importTasksService = new ImportTasksService(this.tasksDatabase);
 
             const tasks = await importTasksService.execute();
 
@@ -129,7 +133,7 @@ export default class TasksController {
         } catch (error) {
 
             res.writeHead(400);
-            res.end('Error getting tasks: ' + error.message);
+            res.end('Error importing tasks: ' + error.message);
         }
     }
 

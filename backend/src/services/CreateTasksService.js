@@ -1,14 +1,29 @@
+// utils
+import generateUUID from "../utils/generate-uuid-util.js";
 
+//repository
+import TasksRepository from "../repositories/tasks/TasksRepository.js";
 export default class CreateTasksService {
 
-    async execute() {
+    #tasksRepository;
 
-        const tasks = {
-            "name": "Study business",
-            "description": "Study business description"
+    constructor(database) {
+        this.#tasksRepository = new TasksRepository(database);
+    }
+
+    async execute(data) {
+
+        const task = {
+            id: generateUUID(),
+            ...data,
+            created_at: new Date(),
+            updated_at: new Date(),
+            completed_at: null
         }
 
-        return tasks;
+        const createdTask = this.#tasksRepository.createOne({ task });
+
+        return createdTask;
 
     }
 } 

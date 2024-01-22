@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises'
 
 const databasePath = new URL('../db.json', import.meta.url);
-
 export class Database {
 
     #database = {}
@@ -12,15 +11,13 @@ export class Database {
                 this.#database = JSON.parse(data);
             })
             .catch(() => {
+                this.#database = {};
                 this.#persist()
             })
     }
 
     #persist() {
-        fs.writeFile(databasePath, JSON.stringify(this.#database, null, 2))
-            .catch((error) => {
-                console.error('Error writing to file:', error.message);
-            });
+        fs.writeFile(databasePath, JSON.stringify(this.#database, null, 2));
     }
 
     select(table, search) {
@@ -38,7 +35,6 @@ export class Database {
         }
 
         return data;
-
     }
 
     insert(table, data) {
@@ -78,4 +74,4 @@ export class Database {
 
 }
 
-export default databasePath;
+export default Database;

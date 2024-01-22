@@ -1,14 +1,15 @@
 
+// router
 import router from "../routes/index.js";
 
 const routeHandler = (req, res) => {
 
-    const { method, url } = req;
+    const { method } = req;
 
     const routes = Object.values(router);
 
     const route = routes
-        .find(r => r.method === method && r.path === url);
+        .find(r => r.method === method && r.path === req.path);
 
     if (!route) {
 

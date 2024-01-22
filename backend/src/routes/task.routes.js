@@ -27,7 +27,7 @@ const tasksRouter = [
     },
     {
         method: "PATCH",
-        path: "/task/:id",
+        path: "/task/:id/complete",
         handler: (req, res) => tasksController.completeTaskById(req, res)
     },
     {

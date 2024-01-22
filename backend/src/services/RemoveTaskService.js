@@ -1,19 +1,24 @@
 
+//repository
+import TasksRepository from "../repositories/tasks/TasksRepository.js";
 export default class RemoveTasksService {
 
-    async execute(id) {
+    #tasksRepository;
 
-        let tasks = [
-            {
-                id: 1,
-                name: "Study business",
-                description: "Study business description"
-            }
-        ]
+    constructor(database) {
+        this.#tasksRepository = new TasksRepository(database);
+    }
 
-        tasks = tasks.filter(task => task.id !== id)
+    async execute({ id }) {
 
-        return tasks;
+        const tasks = await this.#tasksRepository.list({});
+        const taskExists = tasks.find(task => task.id === id);
+
+        if (!taskExists) {
+            throw new Error("Task not found");
+        }
+
+        this.#tasksRepository.deleteOne({ id });
 
     }
 } 

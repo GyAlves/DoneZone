@@ -1,18 +1,43 @@
 
+//repository
+import TasksRepository from "../repositories/tasks/TasksRepository.js";
+
 export default class UpdateTasksService {
 
-    async execute(name, description, id) {
+    #tasksRepository;
 
-        const task = {
-            "name": "Study business",
-            "description": "Study business description"
+    constructor(database) {
+        this.#tasksRepository = new TasksRepository(database);
+    }
+
+    async execute({ id, task }) {
+
+        const allowedBodyProperties = ["title", "description"];
+
+        const tasks = await this.#tasksRepository.list({});
+        const taskExists = tasks.find(task => task.id === id);
+
+        if (!taskExists) {
+            throw new Error("Task not found");
         }
 
-        task.id = id
-        task.name = name
-        task.description = description
+        const filteredTask = {};
 
-        return task;
+        for (const [property, value] of Object.entries(task)) {
+            if (allowedBodyProperties.includes(property)) {
+                filteredTask[property] = value;
+            }
+        }
+
+        const taskUpdatePayload = {
+            ...taskExists,
+            ...task
+        }
+
+        const taskUpdated = this.#tasksRepository.updateOne({ id, task: taskUpdatePayload });
+
+        return taskUpdated;
 
     }
-} 
+}
+
