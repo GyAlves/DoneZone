@@ -22,9 +22,17 @@ const routeParamsHandlerMiddleware = async (req, _, next) => {
 
     req.on("end", () => {
 
-        reqBody = reqBody === "" ? {} : JSON.parse(reqBody);
+        if (cleanUrl !== "/tasks/import") {
 
-        req.body = reqBody;
+            reqBody = reqBody === "" ? {} : JSON.parse(reqBody);
+            req.body = reqBody;
+
+        } else {
+
+            const boundary = 'X-INSOMNIA-BOUNDARY';
+            const csvDataWithoutBoundary = reqBody.split(`--${boundary}--`)[0].split(`--${boundary}`)[1].trim();
+            req.body = csvDataWithoutBoundary;
+        }
 
         req.queryParams = queryParamsObject;
         req.path = cleanUrl;

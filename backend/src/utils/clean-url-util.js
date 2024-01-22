@@ -19,11 +19,11 @@ const cleanUrlPath = (path) => {
 
         if (!isUUIDRegex.test(path)) {
 
-            cleanUrl += `${path}`
+            cleanUrl += `${path}/`
             return;
         }
 
-        cleanUrl += `/:id/`
+        cleanUrl += `:id/`
         urlParams.push(path);
     });
 

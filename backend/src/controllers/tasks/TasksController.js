@@ -119,12 +119,14 @@ export default class TasksController {
         }
     }
 
-    async importTasks(_, res) {
+    async importTasks(req, res) {
         try {
 
             const importTasksService = new ImportTasksService(this.tasksDatabase);
 
-            const tasks = await importTasksService.execute();
+            let tasksCsv = req.body;
+
+            const tasks = await importTasksService.execute({ csv: tasksCsv });
 
             res.setHeader('Content-Type', 'application/json');
 
