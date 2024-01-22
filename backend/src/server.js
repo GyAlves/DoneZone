@@ -1,9 +1,12 @@
 // dependencies
 import http from "node:http";
+import dotenv from "dotenv"
 
 // middlewares
 import routeHandlerMiddleware from "./middlewares/route-handler-middleware.js";
 import routeParamsHandlerMiddleware from "./middlewares/params-handler-middleware.js";
+
+dotenv.config();
 
 const server = http.createServer((req, res) => {
     routeParamsHandlerMiddleware(req, res, () => {
@@ -11,8 +14,6 @@ const server = http.createServer((req, res) => {
     });
 });
 
-const port = 4000;
+const port = process.env.PORT;
 
-server.listen(port, () => {
-    console.log("Server running on port " + port)
-})
+server.listen(port)

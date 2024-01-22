@@ -6,7 +6,7 @@ const routeParamsHandlerMiddleware = async (req, _, next) => {
 
     let reqBody = '';
 
-    const newUrl = new URL(req.url, "http://localhost:4000"); // TODO: put on .env
+    const newUrl = new URL(req.url, process.env.API_BASE_URL);
 
     const { cleanUrl, urlParams } = cleanUrlPath(newUrl.pathname);
 

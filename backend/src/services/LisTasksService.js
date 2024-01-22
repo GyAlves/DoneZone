@@ -1,6 +1,5 @@
 // repository
 import TasksRepository from "../repositories/tasks/TasksRepository.js";
-
 export default class ListTasksService {
 
     #tasksRepository;

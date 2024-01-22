@@ -21,11 +21,12 @@ export default class CompleteTasksService {
         const lines = csv.split('\n');
 
         let csvStartIndex = lines.findIndex((line) => line.startsWith('title,'));
-        csvStartIndex += 1;
 
         if (csvStartIndex === -1) {
             throw new Error('CSV data not found in the multipart form data.');
         }
+
+        csvStartIndex += 1;
 
         const csvData = lines.slice(csvStartIndex).join('\n');
 

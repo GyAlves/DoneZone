@@ -75,6 +75,8 @@ export default class TasksController {
 
         } catch (error) {
 
+            // TODO: create an Error Handler
+
             res.writeHead(400);
             res.end('Error updating task: ' + error.message);
         }

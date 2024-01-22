@@ -19,12 +19,15 @@ export default class CompleteTasksService {
             throw new Error("Task not found");
         }
 
-        taskExists.completed_at = new Date();
+        const updatedTask = {
+            ...taskExists,
+            updated_at: new Date()
+        }
 
         const taskUpdated = this.#tasksRepository.updateOne(
             {
                 id,
-                task: taskExists
+                task: updatedTask
             });
 
         return taskUpdated;
